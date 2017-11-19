@@ -1,5 +1,9 @@
 #!/usr/bin/python
 #
+# This script takes 2 arguments:
+#   - sample count to feed into the database
+#   - sample step seconds
+#
 # Documentation:
 # https://oss.oetiker.ch/rrdtool/tut/rrd-beginners.en.html
 # https://oss.oetiker.ch/rrdtool/tut/rrdtutorial.en.html
@@ -11,6 +15,7 @@
 import sys
 import rrdtool
 from rrdtool import update as rrd_update
+from rrdtool import fetch as rrd_fetch
 import random
 import time
 import datetime
@@ -22,12 +27,13 @@ print '--------------------------------------'
 sample_cnt = sys.argv[1]
 sample_step_sec = sys.argv[2]
 
+db_name = 'example.rrd'
 print '--------------------------------------'
 print 'Sample count: ', sample_cnt
 print 'Database sample step seconds: ', sample_step_sec
 print '--------------------------------------'
 
-ret = rrdtool.create("example.rrd", "--step", sample_step_sec, "--start", '0',
+ret = rrdtool.create(db_name, "--step", sample_step_sec, "--start", '0',
   "DS:metric1:GAUGE:4:U:U",
   "DS:metric2:GAUGE:4:U:U",
   "RRA:AVERAGE:0.5:1:600",
@@ -35,7 +41,7 @@ ret = rrdtool.create("example.rrd", "--step", sample_step_sec, "--start", '0',
 
 # Basic function to write new values at the specified timestamp
 def update_db(timestamp, metric1, metric2):
-  ret = rrd_update('example.rrd', '%s:%s:%s' % (timestamp, metric1, metric2));
+  ret = rrd_update(db_name, '%s:%s:%s' % (timestamp, metric1, metric2));
   print "%s: Updated db @%s with: %s, %s" % (datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'), timestamp, metric1, metric2)
 
 # Dummy loop to write 2 random metrics
@@ -57,7 +63,25 @@ def fake_data_write(sample_count, sample_db_step):
     time.sleep(int(sample_db_step))
 
   print start_end_times
+  return start_end_times
 
-fake_data_write(sample_cnt, sample_step_sec)
+# Retrieves data from the specified time frame.
+# db - database file name
+# time_frame - dict with start, end items, e.g.: {'start': 1511116898, 'end': 1511116902}
+#
 # Data fetch example cmdline:
 # rrdtool fetch example.rrd LAST --start 1510487244 --end 1510487260
+def fetch_db(db, time_frame):
+  start_sec = time_frame.get('start')
+  end_sec = time_frame.get('end')
+  print "Fetching from \'%s\' db. Start: %s ; End: %s" % (str(db), start_sec, end_sec)
+  data = rrd_fetch(db, 'AVERAGE', '--start', str(start_sec), '--end', str(end_sec))
+  print data
+
+
+def main():
+  time_frame = fake_data_write(sample_cnt, sample_step_sec)
+  fetch_db(db_name, time_frame)
+
+if __name__ == "__main__":
+    main()
