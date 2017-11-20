@@ -2,11 +2,12 @@ import RPi.GPIO as GPIO
 import time
 GPIO.setmode(GPIO.BCM)
 
-TRIG = 23 
-ECHO = 24
-
+TRIG = 5
+ECHO = 19
+#ECHO2 = 26
 
 def setup():
+    """Set up pins for sensor."""
     # GPIO.setmode(GPIO.BOARD)       # Numbers GPIOs by physical location
 
     logIt("Distance Measurement In Progress")
@@ -15,7 +16,7 @@ def setup():
     res()
  
 def res():
-    """resets sensor."""
+    """Resets sensor."""
     GPIO.output(TRIG, False)
     logIt("Waiting For Sensor To Settle")
 
@@ -26,6 +27,7 @@ def res():
     GPIO.output(TRIG, False)
   
 def blink():
+    """Gets sensor values, calcuclates and saves distance."""
     while True:
         while GPIO.input(ECHO)==0:
             pulse_start = time.time()
@@ -41,6 +43,7 @@ def blink():
         res()
 
 def destroy():
+    """Clean up."""
     GPIO.cleanup()                  # Release resource
 
 def saveData(distance):
