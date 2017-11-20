@@ -3,7 +3,8 @@ import time
 GPIO.setmode(GPIO.BCM)
 
 TRIG = 5
-ECHO = 19
+echo_pins = { "pirmas": 19, "antras": 26 }
+#ECHO = 19
 #ECHO2 = 26
 
 def setup():
@@ -12,7 +13,8 @@ def setup():
 
     logIt("Distance Measurement In Progress")
     GPIO.setup(TRIG,GPIO.OUT)
-    GPIO.setup(ECHO,GPIO.IN)
+    for i in echo_pins:
+        GPIO.setup(echo_pins[i],GPIO.IN)
     res()
  
 def res():
@@ -20,7 +22,7 @@ def res():
     GPIO.output(TRIG, False)
     logIt("Waiting For Sensor To Settle")
 
-    time.sleep(5)
+    time.sleep(2)
 
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
@@ -29,26 +31,27 @@ def res():
 def blink():
     """Gets sensor values, calcuclates and saves distance."""
     while True:
-        while GPIO.input(ECHO)==0:
-            pulse_start = time.time()
+        for i in echo_pins:
+            while GPIO.input(echo_pins[i])==0:
+                pulse_start = time.time()
 
-        while GPIO.input(ECHO)==1:
-            pulse_end = time.time()
+            while GPIO.input(echo_pins[i])==1:
+                pulse_end = time.time()
 
-        pulse_duration = pulse_end - pulse_start
-        distance = pulse_duration * 17150
-        distance = round(distance, 2)
+            pulse_duration = pulse_end - pulse_start
+            distance = pulse_duration * 17150
+            distance = round(distance, 2)
 
-        saveData(distance)
-        res()
+            saveData(i, distance)
+            res()
 
 def destroy():
     """Clean up."""
     GPIO.cleanup()                  # Release resource
 
-def saveData(distance):
+def saveData(sensor_name, distance):
     """Saves provided data to database"""
-    logIt('Distance: %s cm' % (distance))
+    logIt("Sensor %s shows distance: %s cm" % (sensor_name, distance))
 
 def logIt(text):
     """Logs provided text to log file."""
