@@ -3,7 +3,10 @@ import time
 GPIO.setmode(GPIO.BCM)
 
 TRIG = 5
-echo_pins = { "pirmas": 19, "antras": 26 }
+echo_pins = { "pirmas": 19,
+              "antras": 26, 
+              "trecias": 6,
+              "ketvirtas": 13}
 #ECHO = 19
 #ECHO2 = 26
 
@@ -22,7 +25,7 @@ def res():
     GPIO.output(TRIG, False)
     logIt("Waiting For Sensor To Settle")
 
-    time.sleep(2)
+    time.sleep(1)
 
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
