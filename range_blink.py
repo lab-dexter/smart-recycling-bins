@@ -45,7 +45,12 @@ def blink():
             distance = pulse_duration * 17150
             distance = round(distance, 2)
 
-            saveData(i, distance)
+            if distance < 200:
+                if distance < 10:
+                    logIt("%s recycle bin is full! Sending notification" % (i))
+                saveData(i, distance)
+            else:
+                logIt("skipping %s sensor results. %s is too big." % (i, distance))
             res()
 
 def destroy():
