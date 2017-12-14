@@ -1,0 +1,10 @@
+[Unit]
+Description=Smart Recycle Bins Service
+After=multi-user.target
+ 
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /home/pi/smart-recycling-bin/monitor.py
+ 
+[Install]
+WantedBy=multi-user.target
