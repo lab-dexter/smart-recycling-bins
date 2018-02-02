@@ -11,7 +11,7 @@ BRANCH=${1:-"master"}
 # Parameters
 
 PENV="srb"
-DPKG_LIST=(python-setuptools)
+DPKG_LIST="python-setuptools python-pip"
 
 # recycle-bin.service deployment variables
 DIR="smart-recycling-bin"
@@ -27,7 +27,7 @@ echo "---------------------------------------------------"
 
 rm -rf ./${DIR} && \
   echo "Removed ./${DIR} directory"
-yes | git clone -b ${BRANCH} git@github.com:lab-dexter/smart-recycling-bins.git ${DIR}
+git clone -b ${BRANCH} https://github.com/lab-dexter/smart-recycling-bins.git ${DIR}
 
 echo "==================================================="
 echo "Deploying dependency packages, etc."
@@ -43,17 +43,13 @@ for DPKG in $DPKG_LIST; do
     apt-get install ${DPKG} -y;
   fi
 done
-# e.g.: dpkg -l python3-venv | grep python3-venv 
+/usr/bin/easy_install virtualenv
 
 source ${PENV}/bin/activate || \
   echo "Virtual python environment \'${PENV}\' not found. Creating..." && \
 #  python3 -m venv ${PENV} && \
-  virtualenv ${PENV}
-  echo "==================================================="
-  echo " Successfully created virtual python env: ${PENV}"
-  echo "==================================================="
+  virtualenv ${PENV} && source ${PENV}/bin/activate
 
-source ${PENV}/bin/activate
 pip install -r "${DIR}/config/requirements.txt"
 
 echo "==================================================="
