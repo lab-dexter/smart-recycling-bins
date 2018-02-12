@@ -14,7 +14,7 @@ BRANCH=${1:-"master"}
 PENV="srb"
 DPKG_LIST="python-setuptools python-pip"
 DEPLOY_FILE="app-sync.sh"
-DEPLOYMENT_DIR="/home/pi/smart-recycle-bins-app"
+DEPLOYMENT_DIR="/home/pi/smart-recycling-bins-app"
 
 # recycle-bin.service deployment variables
 DIR="smart-recycling-bins"
@@ -79,4 +79,4 @@ cp ${DEPLOYMENT_DIR}/${DIR}/${DEPLOY_FILE} ${DEPLOYMENT_DIR}/${DEPLOY_FILE} && \
 sudo systemctl daemon-reload
 sudo systemctl enable ${SERVICE_FILE} 
 sudo systemctl start ${SERVICE_FILE} 
-echo "$(timestamp) : Finished deploying/updating smart-recycle-bins"
+echo "$(timestamp) : Finished deploying/updating smart-recycling-bins-app"
