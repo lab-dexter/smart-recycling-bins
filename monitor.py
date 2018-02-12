@@ -6,7 +6,7 @@ GPIO.setmode(GPIO.BCM)
 
 TRIG = 5
 ECHO_PINS = { "1": 19,
-              "2": 26, 
+              "2": 26,
               "3": 6,
               "4": 13}
 
@@ -14,10 +14,6 @@ ECHO_PINS = { "1": 19,
 MQTT_USERNAME  = "6ebd1c90-d8bf-11e7-ba6c-75d14f3b7ebe"
 MQTT_PASSWORD  = "9a7d1fcc88802a51170e151eeb195e035ae9af33"
 MQTT_CLIENT_ID = "9577cb70-ddb3-11e7-b67f-67bba9556416"
-
-def logIt(text):
-    """Logs provided text to log file."""
-    print text
 
 
 class SmartBin():
@@ -39,13 +35,13 @@ class SmartBin():
     def log_msg(self, message):
         """If debug, prints text on screen. Logs message to file."""
         if self.debug:
-            logIt(message)
+            print message
 
     def setup(self):
         """Set up pins for sensor."""
         # GPIO.setmode(GPIO.BOARD)       # Numbers GPIOs by physical location
 
-        self.log_msg("Distance Measurement In Progress")
+        self.log_msg("Distance measurement in progress")
         GPIO.setup(self.trig,GPIO.OUT)
         for i in self.echo_pins:
             GPIO.setup(self.echo_pins[i],GPIO.IN)
@@ -54,7 +50,7 @@ class SmartBin():
     def res(self):
         """Resets sensor."""
         GPIO.output(self.trig, False)
-        self.log_msg("Waiting For Sensor To Settle")
+        self.log_msg("Waiting for sensor to settle")
 
         time.sleep(1)
 
@@ -70,8 +66,13 @@ class SmartBin():
                 data_list = []
                 for j in xrange(5):
                     self.res()
+                    k = 0
                     while GPIO.input(self.echo_pins[i])==0:
                         pulse_start = time.time()
+                        k += 1
+                        if k > 200:
+                            self.log_msg("Could not get response from sensor %s, continuing with next" % (i))
+                            break
 
                     while GPIO.input(self.echo_pins[i])==1:
                         pulse_end = time.time()
@@ -82,15 +83,15 @@ class SmartBin():
 
                     if distance < 200:
                         if distance < 10:
-                            self.log_msg("%s recycle bin is full! Sending notification" % (i))
+                            self.log_msg("Recycle bin %s is full! Sending notification" % (i))
                         data_list.append(distance)
                     else:
-                        self.log_msg("skipping %s sensor results. %s is too big." % (i, distance))
+                        self.log_msg("Skipping sensor %s results. %s is too big." % (i, distance))
                 if len(data_list) > 0:
                     average_distance = round(sum(data_list) / len(data_list), 2)
                     self.save_data(i, average_distance)
                 else:
-                    self.log_msg("sensor %s returned corrupt data, skipping data upload" % (i))
+                    self.log_msg("Sensor %s returned corrupt data, skipping data upload" % (i))
 
     def destroy(self):
         """Clean up."""
