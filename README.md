@@ -5,6 +5,6 @@
 ```
 sudo rpi-update -y
 after it's updated and rebooted:
-wget https://github.com/lab-dexter/smart-recycling-bins/blob/master/setup.py
+wget https://github.com/lab-dexter/smart-recycling-bins/blob/master/setup.sh
 sudo ./setup.sh
 ```
