@@ -4,7 +4,7 @@ After=multi-user.target
  
 [Service]
 Type=simple
-ExecStart=/home/pi/smart-recycle-bins-app/srb/bin/python /home/pi/smart-recycling-bins-app/smart-recycling-bins/monitor.py
+ExecStart=/home/pi/smart-recycling-bins-app/srb/bin/python /home/pi/smart-recycling-bins-app/smart-recycling-bins/monitor.py
  
 [Install]
 WantedBy=multi-user.target
