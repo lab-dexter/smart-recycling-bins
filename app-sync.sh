@@ -17,7 +17,7 @@ DEPLOY_FILE="app-sync.sh"
 DEPLOYMENT_DIR="/home/pi/smart-recycle-bins-app"
 
 # recycle-bin.service deployment variables
-DIR="smart-recycling-bins-repo"
+DIR="smart-recycling-bins"
 SERVICE_FILE="recycle-bin.service"
 #-----------------------------------------------------------------------------------------
 # Functions
