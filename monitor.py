@@ -121,4 +121,4 @@ if __name__ == '__main__':     # Program start from here
     except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the child program destroy() will be  executed.
         smart_bin.destroy()
     except Exception as e:
-        logIt("Something went wrong. Exception: %s" % (str(e)))
+        smart_bin.log_msg("Something went wrong. Exception: %s" % (str(e)))
