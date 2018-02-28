@@ -4,11 +4,13 @@
 # from target branch.
 #
 # Arguments accepted:
-#   1 -> BRANCH - repo branch to synch with. Defaults to 'master' branch if not specified
+#   1 -> BRANCH       - repo branch to synch with. Defaults to 'master' branch if not specified
+#   2 -> INITIAL_RUN  - forces initial full run of app-sync. Accepted value: "initial"
 #------------------------------------------------------------------------------------------
 # User passed arguments:
 
 BRANCH=${1:-"master"}
+INITIAL_RUN=${2:-0}
 
 #------------------------------------------------------------------------------------------
 # Parameters
@@ -36,14 +38,21 @@ timestamp() {
 check_repo_updates() {
   git --git-dir ${DEPLOYMENT_DIR}/${DIR}/.git fetch
   
-  if [ "$(git --git-dir ${DEPLOYMENT_DIR}/${DIR}/.git rev-parse HEAD)" == "$(git --git-dir ${DEPLOYMENT_DIR}/${DIR}/.git rev-parse @{u})" ]; then
-    echo "Current branch MATCHES upstream branch. Exiting...";
-    app_sync_finish_msg
-    exit 0
-  else
-    echo "Current branch does NOT MATCH upstream branch commit. Pulling...";
+  if [ "${INITIAL_RUN}" = initial ] ; then
+    echo "-----------------------------------------------------------------------------"
+    echo " Initial deployment. Pulling anyway..."
+    echo "-----------------------------------------------------------------------------"
     git --git-dir ${DEPLOYMENT_DIR}/${DIR}/.git --work-tree ${DEPLOYMENT_DIR}/${DIR} pull
-  fi  
+  else
+    if [ "$(git --git-dir ${DEPLOYMENT_DIR}/${DIR}/.git rev-parse HEAD)" == "$(git --git-dir ${DEPLOYMENT_DIR}/${DIR}/.git rev-parse @{u})" ]; then
+      echo "Current branch MATCHES upstream branch. Exiting...";
+      app_sync_finish_msg
+      exit 0
+    else
+      echo "Current branch does NOT MATCH upstream branch commit. Pulling...";
+      git --git-dir ${DEPLOYMENT_DIR}/${DIR}/.git --work-tree ${DEPLOYMENT_DIR}/${DIR} pull
+    fi
+  fi
 }
 
 app_sync_finish_msg() {
@@ -102,7 +111,7 @@ setup_service() {
 
   sudo systemctl daemon-reload
   sudo systemctl enable ${SERVICE_FILE} 
-  sudo systemctl start ${SERVICE_FILE}
+  sudo systemctl restart ${SERVICE_FILE}
 
   # Printing sync finish message
   app_sync_finish_msg

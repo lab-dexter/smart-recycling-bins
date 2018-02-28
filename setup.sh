@@ -30,7 +30,8 @@ cat > /var/spool/cron/crontabs/root <<EOF
 0 * * * * sudo /home/pi/smart-recycling-bins-app/app-sync.sh ${BRANCH} >> /home/pi/smart-recycling-bins-app/smart-recycling-bins-sync.log
 EOF
 sudo cp ${HOMEDIR}smart-recycling-bins/recycle-bin.service /lib/systemd/system/recycle-bin.service
-systemctl daemon-reload
-systemctl enable recycle-bin.service
-systemctl start recycle-bin.service
-sudo reboot
+sudo /home/pi/smart-recycling-bins-app/app-sync.sh ${BRANCH} initial >> /home/pi/smart-recycling-bins-app/smart-recycling-bins-sync.log
+# systemctl daemon-reload
+# systemctl enable recycle-bin.service
+# systemctl start recycle-bin.service
+# sudo reboot
