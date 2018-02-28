@@ -111,7 +111,7 @@ setup_service() {
 
   sudo systemctl daemon-reload
   sudo systemctl enable ${SERVICE_FILE} 
-  sudo systemctl start ${SERVICE_FILE}
+  sudo systemctl restart ${SERVICE_FILE}
 
   # Printing sync finish message
   app_sync_finish_msg
