@@ -26,11 +26,14 @@ gem install chef
 cat > "/etc/chef/first-boot.json" << EOF
 {
    "run_list" :[
+     "role[smart-recycling-bins]"
    ]
 }
 EOF
 
 NODE_NAME=rpi-$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 4 | head -n 1)
+
+hostnamectl set-hostname ${NODE_NAME}
 
 # Create client.rb
 /bin/echo 'log_location     STDOUT' >> /etc/chef/client.rb
