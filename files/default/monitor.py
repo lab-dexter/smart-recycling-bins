@@ -74,8 +74,13 @@ class SmartBin():
                             self.log_msg("Could not get response from sensor %s, continuing with next" % (i))
                             break
 
+                    k = 0
                     while GPIO.input(self.echo_pins[i])==1:
                         pulse_end = time.time()
+                        k += 1
+                        if k > 200:
+                            self.log_msg("Could not get response from sensor %s, continuing with next" % (i))
+                            break
 
                     pulse_duration = pulse_end - pulse_start
                     distance = pulse_duration * 17150
