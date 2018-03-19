@@ -97,6 +97,7 @@ class SmartBin():
                     self.save_data(i, average_distance)
                 else:
                     self.log_msg("Sensor %s returned corrupt data, skipping data upload" % (i))
+                time.sleep(60)
 
     def destroy(self):
         """Clean up."""
