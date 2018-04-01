@@ -9,25 +9,24 @@ service 'ssh' do
 end
 
 apt_update 'Update the apt cache daily' do
-  frequency 86_400
+  frequency node['system']['update-period']
   action :periodic
 end
 
-package %w(git vim)
+package node['system']['packages']
 
 # Starting application deployment
-directory '/home/pi/smart-recycling-bins-app/smart-recycling-bins' do
+directory node['app']['dirs'] do
   recursive true
 end
 
 # Installing python dependencies
-python_runtime '2'
+python_runtime node['app']['python-runtime']
+python_virtualenv node['app']['python-venv-dir']
 
-python_virtualenv '/home/pi/smart-recycling-bins-app/srb'
-
-remote_file '/home/pi/smart-recycling-bins-app/requirements.txt' do
-  source 'https://raw.githubusercontent.com/lab-dexter/smart-recycling-bins/master/config/requirements.txt'
+remote_file node['app']['python-requirements-dest'] do
+  source node['app']['python-requirements-src'] 
   action :create
 end
 
-pip_requirements '/home/pi/smart-recycling-bins-app/requirements.txt'
+pip_requirements node['app']['python-requirements-dest']

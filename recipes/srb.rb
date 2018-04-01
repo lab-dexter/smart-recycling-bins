@@ -6,13 +6,13 @@
 
 # Setting up the service
 
-remote_file '/home/pi/smart-recycling-bins-app/smart-recycling-bins/monitor.py' do
-  source 'https://raw.githubusercontent.com/lab-dexter/smart-recycling-bins/master/monitor.py'
+remote_file node['app']['py-app-dest'] do
+  source node['app']['py-app-source']
   action :create
 end
 
-remote_file '/lib/systemd/system/recycle-bin.service' do
-  source 'https://raw.githubusercontent.com/lab-dexter/smart-recycling-bins/master/recycle-bin.service'
+remote_file node['app']['service-dest'] do
+  source node['app']['service-source']
   action :create
 end
 
