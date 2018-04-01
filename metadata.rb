@@ -4,7 +4,7 @@ maintainer_email 'you@example.com'
 license 'All Rights Reserved'
 description 'Installs/Configures smart-recycling-bins'
 long_description 'Installs/Configures smart-recycling-bins'
-version '0.1.1'
+version '0.1.5'
 chef_version '>= 12.1' if respond_to?(:chef_version)
 
 depends 'poise-python', '~> 1.6.0'

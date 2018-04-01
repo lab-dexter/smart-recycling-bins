@@ -1,0 +1,13 @@
+[Unit]
+Description=Smart Recycle Bins Service
+After=multi-user.target
+ 
+[Service]
+Type=simple
+ExecStart=<%= @python_venv %>/bin/python <%= @py_app_dest %>
+
+Restart=always
+RestartSec=3
+ 
+[Install]
+WantedBy=multi-user.target
