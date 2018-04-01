@@ -5,10 +5,10 @@ import time
 GPIO.setmode(GPIO.BCM)
 
 TRIG = 5
-ECHO_PINS = { "1": 19,
-              "2": 26,
-              "3": 6,
-              "4": 13}
+ECHO_PINS = {"1": 19,
+#            "2": 26,
+             "3": 6,
+             "4": 13}
 
 # Cayanne creds
 MQTT_USERNAME  = "6ebd1c90-d8bf-11e7-ba6c-75d14f3b7ebe"
@@ -61,7 +61,10 @@ class SmartBin():
     def monitor(self):
         """Gets sensor values, calcuclates and saves distance."""
         while True:
-            self.client.loop()
+            try:
+                self.client.loop()
+            except:
+                self.log_msg("Got exception while connecting to cayanne. Continuing")
             for i in self.echo_pins:
                 data_list = []
                 for j in xrange(5):
@@ -74,8 +77,13 @@ class SmartBin():
                             self.log_msg("Could not get response from sensor %s, continuing with next" % (i))
                             break
 
+                    k = 0
                     while GPIO.input(self.echo_pins[i])==1:
                         pulse_end = time.time()
+                        k += 1
+                        if k > 200:
+                            self.log_msg("Could not get response from sensor %s, continuing with next" % (i))
+                            break
 
                     pulse_duration = pulse_end - pulse_start
                     distance = pulse_duration * 17150
@@ -92,6 +100,7 @@ class SmartBin():
                     self.save_data(i, average_distance)
                 else:
                     self.log_msg("Sensor %s returned corrupt data, skipping data upload" % (i))
+                time.sleep(60)
 
     def destroy(self):
         """Clean up."""

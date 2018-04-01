@@ -1,0 +1,19 @@
+{
+  "name": "smart-recycling-bins",
+  "description": "Role that configures RPI for smart-recycling-bins projects.",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+    "chef_client": {
+      "interval": 3600,
+      "splay": 300
+    }
+  },
+  "override_attributes": {
+  },
+  "chef_type": "role",
+  "run_list": ["recipe[chef-client::default]",
+               "recipe[smart-recycling-bins::default]"
+  ],
+  "env_run_lists": {
+  }
+}
