@@ -11,7 +11,7 @@ default['app']['python-requirements-dest'] = '/home/pi/smart-recycling-bins-app/
 default['app']['python-requirements-src'] = 'https://raw.githubusercontent.com/lab-dexter/smart-recycling-bins/master/config/requirements.txt'
 
 # SRB related config
-default['app']['source-branch'] = 'cm-poc'
+default['app']['source-branch'] = 'master'
 default['app']['py-app-dest'] = '/home/pi/smart-recycling-bins-app/smart-recycling-bins/monitor.py'
 default['app']['py-app-source'] = "https://raw.githubusercontent.com/lab-dexter/smart-recycling-bins/#{default['app']['source-branch']}/files/default/monitor.py"
 
