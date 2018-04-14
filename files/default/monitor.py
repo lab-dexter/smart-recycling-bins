@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import cayenne.client
 import time
-import configparser
+import ConfigParser
 GPIO.setmode(GPIO.BCM)
 
 
@@ -49,7 +49,7 @@ class SmartBin():
         GPIO.output(self.trig, False)
 
     def monitor(self):
-        """Gets sensor values, calcuclates and saves distance."""
+        """Gets sensor values, calculates and saves distance."""
         while True:
             try:
                 self.client.loop()
@@ -110,14 +110,14 @@ class SmartBin():
         self.monitor()
 
 if __name__ == '__main__':     # Program start from here
-    config = configparser.ConfigParser()
+    config = ConfigParser.ConfigParser()
     config.read('/home/pi/smart-recycling-bins-app/smart-recycling-bins/monitor.ini')
-    sleep_time = config['default']['sleep_time']
-    MQTT_USERNAME = config['default']['MQTT_USERNAME']
-    MQTT_PASSWORD = config['default']['MQTT_PASSWORD']
-    MQTT_CLIENT_ID = config['default']['MQTT_CLIENT_ID']
-    TRIG = config['default']['TRIG']
-    ECHO_PINS = config['default']['ECHO_PINS']
+    sleep_time = config.get('default', 'sleep_time')
+    MQTT_USERNAME = config.get('default', 'MQTT_USERNAME')
+    MQTT_PASSWORD = config.get('default', 'MQTT_PASSWORD')
+    MQTT_CLIENT_ID = config.get('default', 'MQTT_CLIENT_ID')
+    TRIG = config.getint('default', 'TRIG')
+    ECHO_PINS = config.get('default', 'ECHO_PINS')
     smart_bin = SmartBin(mqtt_username = MQTT_USERNAME,
                          mqtt_password = MQTT_PASSWORD,
                          mqtt_client_id = MQTT_CLIENT_ID,
