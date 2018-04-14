@@ -1,28 +1,18 @@
 import RPi.GPIO as GPIO
-import time
 import cayenne.client
 import time
+import configparser
 GPIO.setmode(GPIO.BCM)
-
-TRIG = 5
-ECHO_PINS = {"1": 19,
-#            "2": 26,
-             "3": 6,
-             "4": 13}
-
-# Cayanne creds
-MQTT_USERNAME  = "6ebd1c90-d8bf-11e7-ba6c-75d14f3b7ebe"
-MQTT_PASSWORD  = "9a7d1fcc88802a51170e151eeb195e035ae9af33"
-MQTT_CLIENT_ID = "69ef6430-3e12-11e8-b949-51e66782563e"
 
 
 class SmartBin():
-    def __init__(self, mqtt_username, mqtt_password, mqtt_client_id, trig, echo_pins, debug = True):
+    def __init__(self, mqtt_username, mqtt_password, mqtt_client_id, trig, echo_pins, sleep_time, debug = True):
         self.mqtt_username = mqtt_username
         self.mqtt_password = mqtt_password
         self.mqtt_client_id = mqtt_client_id
         self.trig = trig
         self.echo_pins = echo_pins
+        self.sleep_time = sleep_time
         self.debug = debug
         client = None
         self.setup()
@@ -100,7 +90,7 @@ class SmartBin():
                     self.save_data(i, average_distance)
                 else:
                     self.log_msg("Sensor %s returned corrupt data, skipping data upload" % (i))
-                time.sleep(60)
+                time.sleep(sleep_time)
 
     def destroy(self):
         """Clean up."""
@@ -120,11 +110,20 @@ class SmartBin():
         self.monitor()
 
 if __name__ == '__main__':     # Program start from here
+    config = configparser.ConfigParser()
+    config.read('/home/pi/smart-recycling-bins-app/smart-recycling-bins/monitor.ini')
+    sleep_time = config['default']['sleep_time']
+    MQTT_USERNAME = config['default']['MQTT_USERNAME']
+    MQTT_PASSWORD = config['default']['MQTT_PASSWORD']
+    MQTT_CLIENT_ID = config['default']['MQTT_CLIENT_ID']
+    TRIG = config['default']['TRIG']
+    ECHO_PINS = config['default']['ECHO_PINS']
     smart_bin = SmartBin(mqtt_username = MQTT_USERNAME,
                          mqtt_password = MQTT_PASSWORD,
                          mqtt_client_id = MQTT_CLIENT_ID,
                          trig = TRIG,
-                         echo_pins = ECHO_PINS)
+                         echo_pins = ECHO_PINS,
+                         sleep_time = sleep_time)
     try:
         smart_bin.run_it()
     except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the child program destroy() will be  executed.

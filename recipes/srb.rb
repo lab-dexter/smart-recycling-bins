@@ -11,6 +11,11 @@ remote_file node['app']['py-app-dest'] do
   action :create
 end
 
+remote_file node['app']['ini-app-dest'] do
+  source node['app']['ini-app-source']
+  action :create
+end
+
 template node['app']['service-dest'] do
   source 'recycle-bin.service.erb'
   variables(
