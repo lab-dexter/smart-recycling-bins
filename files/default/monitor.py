@@ -112,7 +112,7 @@ class SmartBin():
 if __name__ == '__main__':     # Program start from here
     config = ConfigParser.ConfigParser()
     config.read('/home/pi/smart-recycling-bins-app/smart-recycling-bins/monitor.ini')
-    sleep_time = config.get('default', 'sleep_time')
+    sleep_time = config.getint('default', 'sleep_time')
     MQTT_USERNAME = config.get('default', 'MQTT_USERNAME')
     MQTT_PASSWORD = config.get('default', 'MQTT_PASSWORD')
     MQTT_CLIENT_ID = config.get('default', 'MQTT_CLIENT_ID')
