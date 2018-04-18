@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import cayenne.client
 import time
 import ConfigParser
+import ast
 GPIO.setmode(GPIO.BCM)
 
 
@@ -117,7 +118,7 @@ if __name__ == '__main__':     # Program start from here
     MQTT_PASSWORD = config.get('default', 'MQTT_PASSWORD')
     MQTT_CLIENT_ID = config.get('default', 'MQTT_CLIENT_ID')
     TRIG = config.getint('default', 'TRIG')
-    ECHO_PINS = config.get('default', 'ECHO_PINS')
+    ECHO_PINS = ast.literal_eval(config.get('default', 'ECHO_PINS'))
     smart_bin = SmartBin(mqtt_username = MQTT_USERNAME,
                          mqtt_password = MQTT_PASSWORD,
                          mqtt_client_id = MQTT_CLIENT_ID,
