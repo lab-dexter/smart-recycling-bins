@@ -6,6 +6,7 @@ import ConfigParser
 import ast
 import requests
 import os
+import json
 GPIO.setmode(GPIO.BCM)
 
 
@@ -109,7 +110,7 @@ class SmartBin():
         try:
             timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
             data = {"id": sensor_number, "mac": self.eth_MAC, "data": distance, "time": timestamp}
-            requests.post(self.api_url, data=data)
+            requests.post(self.api_url, data=json.dumps(data))
         except:
             pass
 
