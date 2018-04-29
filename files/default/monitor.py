@@ -154,7 +154,7 @@ if __name__ == '__main__':     # Program start from here
     api_url = config.get('default', 'api_url')
 #    eth_name = get_eth_name()
 #    eth_MAC = get_MAC(eth_name)
-    eth_MAC = get_MAC('eth0')
+    eth_MAC = get_MAC('wlan0')
     smart_bin = SmartBin(mqtt_username=MQTT_USERNAME,
                          mqtt_password=MQTT_PASSWORD,
                          mqtt_client_id=MQTT_CLIENT_ID,
