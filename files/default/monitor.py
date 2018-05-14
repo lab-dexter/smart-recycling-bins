@@ -107,10 +107,11 @@ class SmartBin():
         """Saves provided data to database"""
         self.log_msg("Sensor %s shows distance: %s cm" % (sensor_number, distance))
         self.client.virtualWrite(int(sensor_number), distance)
+        url = self.api_url + "/v1/data"
         try:
             timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
             data = {"id": sensor_number, "mac": self.eth_MAC, "data": distance, "time": timestamp}
-            requests.post(self.api_url, data=json.dumps(data))
+            requests.post(url, data=json.dumps(data))
         except:
             pass
 
